@@ -69,59 +69,64 @@ public class CustomAdapter extends BaseAdapter {
 
             if (isBlack) rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
             else rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+
+            switch (board[position]) {
+                case PAWN:
+                    if (position < 16)
+                        img.setImageResource(imageId[PAWN]);
+                    else
+                        img.setImageResource(imageId[PAWN + 6]);
+                    piece = PAWN;
+                    break;
+                case ROOK:
+                    if (position < 16)
+                        img.setImageResource(imageId[ROOK]);
+                    else
+                        img.setImageResource(imageId[ROOK + 6]);
+                    piece = ROOK;
+                    break;
+                case KNIGHT:
+                    if (position < 16)
+                        img.setImageResource(imageId[KNIGHT]);
+                    else
+                        img.setImageResource(imageId[KNIGHT + 6]);
+                    piece = KNIGHT;
+                    break;
+                case BISHOP:
+                    if (position < 16)
+                        img.setImageResource(imageId[BISHOP]);
+                    else
+                        img.setImageResource(imageId[BISHOP + 6]);
+                    piece = BISHOP;
+                    break;
+                case QUEEN:
+                    if (position < 16)
+                        img.setImageResource(imageId[QUEEN]);
+                    else
+                        img.setImageResource(imageId[QUEEN + 6]);
+                    piece = QUEEN;
+                    break;
+                case KING:
+                    if (position < 16)
+                        img.setImageResource(imageId[KING]);
+                    else
+                        img.setImageResource(imageId[KING + 6]);
+                    piece = KING;
+                    break;
+                case BLANK:
+                    img.setImageResource(imageId[BLANK + 6]);
+                    piece = BLANK;
+                    break;
+                default:
+                    break;
+            }
             if (position == 64) isDrawn = true;
         }
+        else{
 
-        switch (board[position]) {
-            case PAWN:
-                if (position < 16)
-                    img.setImageResource(imageId[PAWN]);
-                else
-                    img.setImageResource(imageId[PAWN + 6]);
-                piece = PAWN;
-                break;
-            case ROOK:
-                if (position < 16)
-                    img.setImageResource(imageId[ROOK]);
-                else
-                    img.setImageResource(imageId[ROOK + 6]);
-                piece = ROOK;
-                break;
-            case KNIGHT:
-                if (position < 16)
-                    img.setImageResource(imageId[KNIGHT]);
-                else
-                    img.setImageResource(imageId[KNIGHT + 6]);
-                piece = KNIGHT;
-                break;
-            case BISHOP:
-                if (position < 16)
-                    img.setImageResource(imageId[BISHOP]);
-                else
-                    img.setImageResource(imageId[BISHOP + 6]);
-                piece = BISHOP;
-                break;
-            case QUEEN:
-                if (position < 16)
-                    img.setImageResource(imageId[QUEEN]);
-                else
-                    img.setImageResource(imageId[QUEEN + 6]);
-                piece = QUEEN;
-                break;
-            case KING:
-                if (position < 16)
-                    img.setImageResource(imageId[KING]);
-                else
-                    img.setImageResource(imageId[KING + 6]);
-                piece = KING;
-                break;
-            case BLANK:
-                img.setImageResource(imageId[BLANK + 6]);
-                piece = BLANK;
-                break;
-            default:
-                break;
         }
+
+
         rowView.setTag(piece);
         return rowView;
     }
