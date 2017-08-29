@@ -5,14 +5,9 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import static android.R.color.black;
 
 /**
  * Created by joshu on 7/30/2017.
@@ -25,15 +20,15 @@ public class CustomAdapter extends BaseAdapter {
     ImageView img;
     View rowView;
     boolean isBlack, isDrawn = false;
-    int[] board = {1, 2, 3, 4, 5, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 5, 4, 3, 2, 1};
+    int[] board = {1, 2, 3, 4, 5, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 8, 9, 10, 12, 11, 10, 9, 8};
 
-    final int PAWN = 0;
-    final int ROOK = 1;
-    final int KNIGHT = 2;
-    final int BISHOP = 3;
-    final int QUEEN = 4;
-    final int KING = 5;
-    final int BLANK = 6;
+    final byte bPAWN = 0; final byte wPAWN=7;
+    final byte bROOK = 1; final byte wROOK=8;
+    final byte bKNIGHT = 2; final byte wKNIGHT=9;
+    final byte bBISHOP = 3; final byte wBISHOP=10;
+    final byte bQUEEN = 4; final byte wQUEEN=11;
+    final byte bKING = 5; final byte wKING=12;
+    final byte BLANK = 6;
 
     public CustomAdapter(Context context, int[] prgmImages) {
         this.context = context;
@@ -64,68 +59,35 @@ public class CustomAdapter extends BaseAdapter {
         img = (ImageView) rowView.findViewById(R.id.imageView1);
         int piece = 0;
 
-        if (isDrawn == false) {
-            if ((position) % 8 != 0) isBlack = !isBlack;
+        if ((position) % 8 != 0) isBlack = !isBlack;
+        if (isBlack) rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+        else rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
 
-            if (isBlack) rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
-            else rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+        switch (board[position]) {
+            case bPAWN: img.setImageResource(imageId[bPAWN]); piece = bPAWN; break;
+            case wPAWN: img.setImageResource(imageId[wPAWN]); piece = wPAWN; break;
 
-            switch (board[position]) {
-                case PAWN:
-                    if (position < 16)
-                        img.setImageResource(imageId[PAWN]);
-                    else
-                        img.setImageResource(imageId[PAWN + 6]);
-                    piece = PAWN;
-                    break;
-                case ROOK:
-                    if (position < 16)
-                        img.setImageResource(imageId[ROOK]);
-                    else
-                        img.setImageResource(imageId[ROOK + 6]);
-                    piece = ROOK;
-                    break;
-                case KNIGHT:
-                    if (position < 16)
-                        img.setImageResource(imageId[KNIGHT]);
-                    else
-                        img.setImageResource(imageId[KNIGHT + 6]);
-                    piece = KNIGHT;
-                    break;
-                case BISHOP:
-                    if (position < 16)
-                        img.setImageResource(imageId[BISHOP]);
-                    else
-                        img.setImageResource(imageId[BISHOP + 6]);
-                    piece = BISHOP;
-                    break;
-                case QUEEN:
-                    if (position < 16)
-                        img.setImageResource(imageId[QUEEN]);
-                    else
-                        img.setImageResource(imageId[QUEEN + 6]);
-                    piece = QUEEN;
-                    break;
-                case KING:
-                    if (position < 16)
-                        img.setImageResource(imageId[KING]);
-                    else
-                        img.setImageResource(imageId[KING + 6]);
-                    piece = KING;
-                    break;
-                case BLANK:
-                    img.setImageResource(imageId[BLANK + 6]);
-                    piece = BLANK;
-                    break;
-                default:
-                    break;
-            }
-            if (position == 64) isDrawn = true;
+            case bROOK: img.setImageResource(imageId[bROOK]); piece = bROOK; break;
+            case wROOK: img.setImageResource(imageId[wROOK]); piece = wROOK; break;
+
+            case bKNIGHT: img.setImageResource(imageId[bKNIGHT]); piece = bKNIGHT; break;
+            case wKNIGHT: img.setImageResource(imageId[wKNIGHT]); piece = wKNIGHT; break;
+
+            case bBISHOP: img.setImageResource(imageId[bBISHOP]); piece = bBISHOP; break;
+            case wBISHOP: img.setImageResource(imageId[wBISHOP]); piece = wBISHOP; break;
+
+            case bQUEEN: img.setImageResource(imageId[bQUEEN]); piece = bQUEEN; break;
+            case wQUEEN: img.setImageResource(imageId[wQUEEN]); piece = wQUEEN; break;
+
+            case bKING: img.setImageResource(imageId[bKING]); piece = bKING; break;
+            case wKING: img.setImageResource(imageId[wKING]); piece = wKING; break;
+
+            case BLANK: img.setImageResource(imageId[BLANK]); piece = BLANK; break;
+            default: break;
         }
-        else{
-
+        if (position == 63) {
+            isDrawn = true;
         }
-
 
         rowView.setTag(piece);
         return rowView;
