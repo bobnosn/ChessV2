@@ -1,12 +1,17 @@
 package com.example.joshu.chessv2;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
+import android.support.annotation.IntegerRes;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
 
 
 /**
@@ -15,24 +20,23 @@ import android.widget.ImageView;
 
 public class CustomAdapter extends BaseAdapter {
     Context context;
-    int[] imageId;
+
+    // We want to include the array for the images here because the GridView needs access to them.  This is labeled FINAL because the array does not change.
+    public final int[] prgmImages = {R.drawable.black_chess_piece_pawn, R.drawable.black_chess_piece_rook, R.drawable.black_chess_piece_knight, R.drawable.black_chess_piece_bishop, R.drawable.black_chess_piece_queen, R.drawable.black_chess_piece_king, R.drawable.blank, R.drawable.white_chess_piece_pawn, R.drawable.white_chess_piece_rook, R.drawable.white_chess_piece_knight, R.drawable.white_chess_piece_bishop, R.drawable.white_chess_piece_queen, R.drawable.white_chess_piece_king};
+
     private static LayoutInflater inflater = null;
     ImageView img;
     View rowView;
     boolean isBlack, isDrawn = false;
-    int[] board = {1, 2, 3, 4, 5, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 8, 9, 10, 12, 11, 10, 9, 8};
+    int[] board;
+    ArrayList<Integer> possMoves;
 
-    final byte bPAWN = 0; final byte wPAWN=7;
-    final byte bROOK = 1; final byte wROOK=8;
-    final byte bKNIGHT = 2; final byte wKNIGHT=9;
-    final byte bBISHOP = 3; final byte wBISHOP=10;
-    final byte bQUEEN = 4; final byte wQUEEN=11;
-    final byte bKING = 5; final byte wKING=12;
-    final byte BLANK = 6;
 
-    public CustomAdapter(Context context, int[] prgmImages) {
+    public CustomAdapter(Context context, int[] board) {
         this.context = context;
-        this.imageId = prgmImages;
+        // We are passing in the initial status of the board when this Adapter is instantiated.  This constructor only runs when the object is initially
+        // instantiated.  The Adapter will relayout when changes are made to this array.
+        this.board = board;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -57,39 +61,38 @@ public class CustomAdapter extends BaseAdapter {
         rowView = inflater.inflate(R.layout.program_list, null);
 
         img = (ImageView) rowView.findViewById(R.id.imageView1);
-        int piece = 0;
+        int piece;
 
         if ((position) % 8 != 0) isBlack = !isBlack;
-        if (isBlack) rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
-        else rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-
-        switch (board[position]) {
-            case bPAWN: img.setImageResource(imageId[bPAWN]); piece = bPAWN; break;
-            case wPAWN: img.setImageResource(imageId[wPAWN]); piece = wPAWN; break;
-
-            case bROOK: img.setImageResource(imageId[bROOK]); piece = bROOK; break;
-            case wROOK: img.setImageResource(imageId[wROOK]); piece = wROOK; break;
-
-            case bKNIGHT: img.setImageResource(imageId[bKNIGHT]); piece = bKNIGHT; break;
-            case wKNIGHT: img.setImageResource(imageId[wKNIGHT]); piece = wKNIGHT; break;
-
-            case bBISHOP: img.setImageResource(imageId[bBISHOP]); piece = bBISHOP; break;
-            case wBISHOP: img.setImageResource(imageId[wBISHOP]); piece = wBISHOP; break;
-
-            case bQUEEN: img.setImageResource(imageId[bQUEEN]); piece = bQUEEN; break;
-            case wQUEEN: img.setImageResource(imageId[wQUEEN]); piece = wQUEEN; break;
-
-            case bKING: img.setImageResource(imageId[bKING]); piece = bKING; break;
-            case wKING: img.setImageResource(imageId[wKING]); piece = wKING; break;
-
-            case BLANK: img.setImageResource(imageId[BLANK]); piece = BLANK; break;
-            default: break;
+        GradientDrawable border = new GradientDrawable();
+        border.setColor(ContextCompat.getColor(context, isBlack
+                ? R.color.gray
+                : R.color.white));
+        if (possMoves != null && possMoves.contains(position)) border.setStroke(4, 0xFFFF0000); //red border with full opacity
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            rowView.setBackgroundDrawable(border);
+        } else {
+            rowView.setBackground(border);
         }
+//        if (isBlack) rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+//        else rowView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+
+        // Assign current piece number to type of piece in our images array at the same location (position)
+        piece = board[position];
+        // Set image to whatever default graphic ID is currently in our images array at the same location (position)
+        img.setImageResource(prgmImages[piece]);
+
         if (position == 63) {
             isDrawn = true;
         }
 
         rowView.setTag(piece);
         return rowView;
+    }
+
+    protected void setPossibleMoves (ArrayList<Integer> possMoves) {
+
+        this.possMoves = possMoves;
+        this.notifyDataSetChanged();
     }
 }
